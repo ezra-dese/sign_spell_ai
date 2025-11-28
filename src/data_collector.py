@@ -81,6 +81,10 @@ def collect_data():
             else:
                 cv2.putText(img, "Press 'r' to Record", (10, 100), 
                             cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
+            
+            # Always show quit instruction
+            cv2.putText(img, "Press 'q' to Quit", (10, 140), 
+                        cv2.FONT_HERSHEY_PLAIN, 1.5, (200, 200, 200), 2)
 
             cv2.imshow("Data Collector", img)
             key = cv2.waitKey(1)

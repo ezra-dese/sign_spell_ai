@@ -1,0 +1,200 @@
+Project Summary
+
+Build a small sign language learning game that uses the webcam to recognize a tiny set of static signs and gives the user feedback.
+
+Flow:
+
+Game shows a target sign (name).
+
+User performs the sign in front of the camera.
+
+System uses pose/keypoint detection to classify the sign.
+
+If correct, user gains points. If wrong, they lose points and get feedback on what to fix.
+
+Scope for v1:
+
+One hand only
+
+5 to 10 static signs (letters or simple signs)
+
+Basic UI, not fancy
+
+Core skills you exercise: pose keypoints, feature design, simple classifiers, temporal smoothing, game loop, feedback design.
+
+Todo List
+Phase 0. Problem framing
+
+ Decide the exact sign set (for example 5 letters: A, B, C, D, L).
+
+ Write down what “correct enough” means for each sign:
+
+Which fingers should be straight or bent
+
+Rough palm orientation (up, sideways, etc.)
+
+Whether location on the screen matters or not
+
+Result: one short spec that describes each sign in human terms.
+
+Phase 1. Tech setup
+
+ Create a new project folder and virtual environment.
+
+ Install OpenCV and Mediapipe (or any hand tracking library you choose).
+
+ Write a minimal script:
+
+Open webcam
+
+Draw hand landmarks on each frame
+
+Exit cleanly on key press
+
+Goal: stable real time hand tracking.
+
+Use the agent IDE here to generate boilerplate for webcam capture and landmark drawing.
+
+Phase 2. Feature design for hand pose
+
+ Decide what you will feed into your classifier. Some options:
+
+Raw landmark coordinates normalized by hand size
+
+Angles at finger joints
+
+Distances between key keypoints
+
+ Implement a function:
+
+def extract_features(landmarks) -> feature_vector:
+    ...
+
+
+ Visual debug: print or log feature vectors for a few frames to sanity check.
+
+Goal: stable, scale and translation invariant feature vectors.
+
+Phase 3. Data collection
+
+ For each chosen sign:
+
+ Collect N samples from you (and ideally a friend or two).
+
+ Save features to disk with labels (for example CSV or NumPy arrays).
+
+ Add a tiny script that:
+
+Prompts which sign you are recording
+
+Records K frames while you hold the sign
+
+Writes out labeled data
+
+This is a perfect use case for the agent IDE: let it generate scripts to record and store data while you control the design.
+
+Phase 4. Classifier
+
+ Load the labeled dataset from disk.
+
+ Split into train and validation sets.
+
+ Try a simple classifier:
+
+KNN
+
+Or SVM
+
+Or simple hand written rules based on feature thresholds
+
+ Evaluate accuracy per sign.
+
+ Inspect confusion cases and tweak features or thresholds.
+
+Goal: acceptable accuracy in offline prediction before going real time.
+
+Phase 5. Real time prediction loop
+
+ Integrate the classifier into the webcam script:
+
+Extract features every frame
+
+Get predicted sign and a confidence score
+
+ Add temporal smoothing:
+
+Maintain a sliding window of predictions
+
+Only accept a sign as “detected” if the same label appears for N consecutive frames
+
+ Visual overlay:
+
+Draw predicted sign label in corner
+
+Optionally show confidence
+
+Phase 6. Game layer
+
+ Implement a simple “round” mechanic:
+
+Randomly pick a target sign from your set
+
+Display its name or image on screen
+
+Wait until user shows a sign and your smoothed prediction fires
+
+ Scoring logic:
+
+Correct prediction: score += X
+
+Incorrect prediction: score − Y
+
+Show score on screen
+
+ Add states:
+
+MENU (start game, quit)
+
+ACTIVE ROUND (waiting for correct sign)
+
+FEEDBACK (brief text “Nice” or “Try again”)
+
+Agent IDE can help generate the basic state machine template, but you define the states.
+
+Phase 7. Educational feedback
+
+ For each sign, define a simple “diagnostic” based on features:
+
+Example: “Your fingers are too curled”
+
+Example: “Thumb position wrong”
+
+ After an incorrect attempt, compute which rule failed and show a specific hint.
+
+ Optionally show a reference image or skeleton for the target sign next to current pose.
+
+This is where it becomes more than a guessing game.
+
+Phase 8. Polish and testing
+
+ Test in different lighting conditions.
+
+ Test with slightly different hand positions and distances from camera.
+
+ Adjust normalization and thresholds so it remains usable.
+
+ Add simple configuration file for:
+
+List of enabled signs
+
+Number of frames to smooth over
+
+Scoring constants
+
+ Write a short README that explains:
+
+What the game does
+
+How to run it
+
+Limitations and ethical note (not a real sign language teacher, just a toy)

@@ -14,10 +14,8 @@ def main():
     game = GameEngine()
 
     cap = cv2.VideoCapture(0)
-    
-    # Set window to be resizable
-    cv2.namedWindow("Sign Spell AI", cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("Sign Spell AI", 1280, 720)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     
     # Check if model is loaded
     if classifier.model is None:

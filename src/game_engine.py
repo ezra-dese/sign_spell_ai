@@ -12,9 +12,7 @@ class GameEngine:
         self.state = self.STATE_MENU
         self.score = 0
         self.target_sign = ""
-        self.signs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 
-                      'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']
-        # Remove J and Z if needed, but keeping for now as per list
+        self.signs = ['A', 'B', 'C', 'D', 'L']
         
         self.prediction_history = deque(maxlen=10) # For smoothing
         self.required_consecutive_frames = 5

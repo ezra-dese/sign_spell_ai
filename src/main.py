@@ -76,16 +76,16 @@ def main():
                 cv2.putText(img, ui_data["feedback"], ((w - feedback_size[0]) // 2, 150), 
                             cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 255), 3)
             
-            # Target letter - LARGE at bottom center
+            # Target letter - LARGE at top right corner
             target_text = ui_data['target']
-            font_scale = 12
-            thickness = 15
+            font_scale = 8
+            thickness = 12
             target_size = cv2.getTextSize(target_text, cv2.FONT_HERSHEY_PLAIN, font_scale, thickness)[0]
-            target_x = (w - target_size[0]) // 2
-            target_y = h - 80
+            target_x = w - target_size[0] - 50
+            target_y = target_size[1] + 100
             
             # Draw background rectangle for target
-            padding = 30
+            padding = 25
             cv2.rectangle(img, 
                          (target_x - padding, target_y - target_size[1] - padding),
                          (target_x + target_size[0] + padding, target_y + padding),

@@ -9,10 +9,8 @@ def collect_data():
     detector = HandDetector(detection_con=0.8)
     extractor = FeatureExtractor()
     
-    # Define signs to record
-    # Skipping J and Z for now as they are dynamic
-    signs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 
-             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']
+    # Define signs to record - reduced set for easier learning
+    signs = ['A', 'B', 'C', 'D', 'L']
     
     data_dir = "../data"
     if not os.path.exists(data_dir):

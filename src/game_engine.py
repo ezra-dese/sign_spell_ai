@@ -18,26 +18,30 @@ class GameEngine:
         self.required_consecutive_frames = 5
         self.feedback_message = ""
         self.feedback_timer = 0
-        self.start_time = 0
-        self.time_limit = 60 # 60 seconds per game
+        self.round_start_time = 0
+        self.round_time_limit = 10 # 10 seconds per letter
+        self.feedback_delay = 2.0 # 2 seconds delay between rounds
 
     def start_game(self):
         self.score = 0
         self.state = self.STATE_PLAYING
-        self.start_time = time.time()
         self.next_round()
 
     def next_round(self):
         self.target_sign = random.choice(self.signs)
         self.prediction_history.clear()
         self.feedback_message = ""
+        self.round_start_time = time.time()
 
     def update(self, predicted_sign, confidence):
         if self.state == self.STATE_PLAYING:
-            # Check time limit
-            elapsed = time.time() - self.start_time
-            if elapsed > self.time_limit:
-                self.state = self.STATE_GAME_OVER
+            # Check time limit for current round
+            elapsed = time.time() - self.round_start_time
+            if elapsed > self.round_time_limit:
+                # Time's up for this round
+                self.feedback_message = "Time's Up!"
+                self.state = self.STATE_FEEDBACK
+                self.feedback_timer = time.time()
                 return
 
             if predicted_sign:
@@ -55,8 +59,8 @@ class GameEngine:
                     self.feedback_timer = time.time()
         
         elif self.state == self.STATE_FEEDBACK:
-            # Show feedback for 1 second then next round
-            if time.time() - self.feedback_timer > 1.0:
+            # Show feedback with delay before next round
+            if time.time() - self.feedback_timer > self.feedback_delay:
                 self.state = self.STATE_PLAYING
                 self.next_round()
 
@@ -66,5 +70,5 @@ class GameEngine:
             "score": self.score,
             "target": self.target_sign,
             "feedback": self.feedback_message,
-            "time_left": max(0, int(self.time_limit - (time.time() - self.start_time))) if self.state == self.STATE_PLAYING else 0
+            "time_left": max(0, int(self.round_time_limit - (time.time() - self.round_start_time))) if self.state == self.STATE_PLAYING else 0
         }
